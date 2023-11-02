@@ -1,5 +1,20 @@
 import { Revenue } from './definitions';
 
+// this throws hydration error
+export const debounce = (callback: Function, wait: number) => {
+  let timeoutId: number;
+
+  // args == search query string
+  return (...args: string[]) => {
+    window.clearTimeout(timeoutId);
+
+    timeoutId = window.setTimeout(() => {
+      // null tells the function 'this' refers to the window
+      callback.apply(null, args);
+    }, wait);
+  };
+};
+
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString('en-US', {
     style: 'currency',
@@ -9,7 +24,7 @@ export const formatCurrency = (amount: number) => {
 
 export const formatDateToLocal = (
   dateStr: string,
-  locale: string = 'en-US',
+  locale: string = 'en-US'
 ) => {
   const date = new Date(dateStr);
   const options: Intl.DateTimeFormatOptions = {
